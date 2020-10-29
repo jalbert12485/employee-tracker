@@ -9,7 +9,7 @@ const { POINT_CONVERSION_COMPRESSED } = require("constants");
 
 var connection;
 if(process.env.JAWSDB_URL){
-  connection=mysql.createConnection(proccess.env.JAWSDB_URL);
+  connection=mysql.createConnection(process.env.JAWSDB_URL);
 }else{
   connection = mysql.createConnection({
   host: "localhost",
@@ -21,7 +21,7 @@ if(process.env.JAWSDB_URL){
   user: "root",
 
   // Your password
-  password: "root",
+  password: "",
   database: "employee_tracker"
 });};
 
