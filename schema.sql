@@ -71,7 +71,15 @@ VALUES ("Arthur", "Albert", 2, 1);
 INSERT INTO employee (firstName, lastName, roleId, managerId)
 VALUES ("Teddy", "Albert", 4, 2);
 
-SELECT * FROM employee JOIN role
+SELECT employee.firstName, emp.firstName FROM employee JOIN employee as emp on (employee.managerId=emp.id);
+
+SELECT Concat(employee.firstName,' ',employee.lastName) as Name, role.title as Title, role.salary as Salary, department.name as Department, Concat(emp.firstName,' ',emp.lastName) as Manager FROM employee JOIN role
 	ON (employee.roleId = role.id)
-    JOIN department ON (role.departmentId=department.id);
+    JOIN department ON (role.departmentId=department.id)
+    Join employee as emp on (employee.managerId=emp.id);
+    
+
+ 
+    
+
     

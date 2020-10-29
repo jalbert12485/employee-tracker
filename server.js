@@ -17,7 +17,7 @@ var connection = mysql.createConnection({
 
   // Your password
   password: "root",
-  database: "products_db"
+  database: "employee_tracker"
 });
 
 
@@ -103,19 +103,36 @@ app.use(express.static("public"));
 
 //   });
 // });
+app.get("/view/products", function(req, res) {
+  connection.query(`SELECT Concat(employee.firstName,' ',employee.lastName) as Name, role.title as Title, role.salary as Salary, department.name as Department, Concat(emp.firstName,' ',emp.lastName) as Manager FROM employee JOIN role
+	ON (employee.roleId = role.id)
+    JOIN department ON (role.departmentId=department.id)
+    Join employee as emp on (employee.managerId=emp.id);`, function(err, response) {
+    if (err) throw err;
+      
+    res.json(response);
+ 
+ 
+
+  });
+});
 
 
-// app.post("/admin/productchange", function(req,res){
+app.post("/:category", function(req,res){
 
-  
-//   connection.query(`UPDATE products SET ${req.body.value}="${req.body.input}" WHERE id = ${req.body.id}`, function(err,result){
-//     if(err) throw err;
-//     res.end();
-//   }
-  
-//   )
+    let category=req.params.category;
 
-// });
+    connection.query(
+        `INSERT INTO ${category} SET ?`,
+        req.body,
+        function(err, res) {
+          if (err) throw err;
+          
+        });
+
+    res.end();
+
+});
 
 
 
@@ -127,5 +144,5 @@ app.get("/*", function(req, res) {
 // Listener
 // ===========================================================
 app.listen(PORT, function() {
-  console.log("App listening on PORT localhost:" + PORT);
+  console.log("App listening on PORT http://localhost:" + PORT);
 });

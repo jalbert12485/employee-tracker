@@ -1,9 +1,34 @@
 let departmentInfo=["Id","Name"];
 let roleInfo=["Id", "Title", "Salary", "Department Id" ];
 let employeeInfo=["Id","First Name","Last Name","Role Id", "Manager Id"];
+let returnData;
 
 $("#add-data").on("click",createAddDisplay);
-$("#manage-data").on("click", createManageDisplay);
+$("#manage-data").on("click", function(){
+    $.get("/view/products")
+    .done(function(data){
+        returnData=data;
+        createInformationDisplay();
+    })
+
+});
+// $("#change-data").on("click", createChangeDisplay);
+
+// function createChangeDisplay(){
+//     $("#button-div").empty();
+//     $("#button-div").html(`<div class="col-md-4" id="change-department"><button type="button" class="btn btn-primary" >Change Departments</button></div>
+//     <div class="col-md-4" id="change-role"><button type="button" class="btn btn-primary" >Change Roles</button></div>
+//     <div class="col-md-4" id="change-employee"><button type="button" class="btn btn-primary" >Change Employees</button></div>`);
+
+//     $("#add-department").on("click", function(){
+//         addDisplay("Department");});
+//     $("#add-role").on("click",function(){addDisplay("Role");});
+//     $("#add-employee").on("click",function(){addDisplay("Employee");});
+// }
+
+
+
+
 
 function createAddDisplay(){
     $("#button-div").empty();
@@ -19,12 +44,135 @@ function createAddDisplay(){
 }
 
 
-function createManageDisplay(){
-    $("#button-div").empty();
-    $("#button-div").html(`<div class="col-md-4" id="manage-department"><button type="button" class="btn btn-primary" >Manage Departments</button></div>
-    <div class="col-md-4" id="manage-role"><button type="button" class="btn btn-primary" >Manage Roles</button></div>
-    <div class="col-md-4" id="manage-employee"><button type="button" class="btn btn-primary" >Manage Employee</button></div>`);
+function createInformationDisplay(){
+    $("#form-container").empty();
+    let newTable=$("<table>");
+    let newRow=$("<tr>");
+    for(const value in returnData[0]){
+        let newCol=$("<th>");
+        newCol.text(value);
+        newRow.append(newCol);
+    }
+    newTable.append(newRow);
+    $("#form-container").append(newTable);
+    for(let i=0; i< returnData.length; i++){
+        newRow=$("<tr>");
+        for(const value in returnData[i]){
+            let newCol=$("<th>");
+            newCol.text(returnData[i][`${value}`]);
+            newRow.append(newCol);
+        }
+        newTable.append(newRow);
+    }
+
+    viewSelectOptions();
+
+    let newDiv=$("<div>");
+    newDiv.addClass("row");
+    let newDiv2=$("<div>");
+    newDiv2.addClass("col-md-6");
+    let newButton=$("<button>");
+    newButton.text("Restart");
+    newButton.addClass("btn btn-primary");
+    newButton.on("click",function(e){
+        e.preventDefault();
+        location.reload();
+    });
+    newDiv2.append(newButton);
+    newDiv.append(newDiv2);
+    $("#form-container").append(newDiv);
+
+
 }
+
+function viewSelectOptions(){
+    let selectContainer=$("<div>");
+    selectContainer.addClass("row");
+    selectContainer.attr("id","select-container");
+    $("#form-container").append(selectContainer);
+    viewSelect("Department");
+    viewSelect("Title");
+    viewSelect("Manager");
+    
+
+}
+
+
+function viewSelect(value){
+
+    let uniqueChoices=[];
+    for(let i=0; i<returnData.length; i++){
+        if(uniqueChoices.indexOf(returnData[i][`${value}`])==-1){
+            uniqueChoices.push(returnData[i][`${value}`]);
+        }
+    }
+
+
+    let newDiv=$("<div>");
+    let newHTML="";
+    for(let i=0; i< uniqueChoices.length; i++){
+        newHTML+=`<option value="${uniqueChoices[i]}">${uniqueChoices[i]}</option>`;
+    }
+
+    newDiv.html( `<form> <div class="form-group">
+    <label for="${value}-view">View ${value}</label>
+    <select class="form-control" id="${value}-view"><option value=${uniqueChoices[0]}> Select ${value}</option>${newHTML}
+    </select>
+  </div> </form>`);
+    newDiv.addClass("col-md-4");
+
+    $("#select-container").append(newDiv);
+    $(`#${value}-view`).on("change",function(){
+        filteredEmployeeView(value, this.value);
+    });
+
+
+}
+
+function filteredEmployeeView(value, name){
+
+    $("#form-container").empty();
+    let newTable=$("<table>");
+    let newRow=$("<tr>");
+    for(const value in returnData[0]){
+        let newCol=$("<th>");
+        newCol.text(value);
+        newRow.append(newCol);
+    }
+    newTable.append(newRow);
+    $("#form-container").append(newTable);
+    for(let i=0; i< returnData.length; i++){
+ 
+        if(returnData[i][`${value}`]==name){
+        newRow=$("<tr>");
+        for(const value in returnData[i]){
+            let newCol=$("<th>");
+            newCol.text(returnData[i][`${value}`]);
+            newRow.append(newCol);
+        }
+        newTable.append(newRow);
+    }}
+
+    viewSelectOptions();
+
+    let newDiv=$("<div>");
+    newDiv.addClass("row");
+    let newDiv2=$("<div>");
+    newDiv2.addClass("col-md-6");
+    let newButton=$("<button>");
+    newButton.text("Restart");
+    newButton.addClass("btn btn-primary");
+    newButton.on("click",function(e){
+        e.preventDefault();
+        location.reload();
+    });
+    newDiv2.append(newButton);
+    newDiv.append(newDiv2);
+    $("#form-container").append(newDiv);
+
+}
+
+
 
 function addDisplay(info){
 
@@ -63,8 +211,8 @@ function addDisplay(info){
         newButton1.text("Submit");
         newButton1.on("click", function(event){
           event.preventDefault();
-        //   sendNewWipe();
-        //   location.reload();
+          sendToServer(info);
+
         });
           newCol.append(newButton1);
           newRow.append(newCol);
@@ -85,4 +233,39 @@ function addDisplay(info){
        
       
       
+}
+
+function sendToServer(info){
+    let newInfo=[];
+ for(let i=1; i<info.length; i++ ){
+    newInfo.push($(`#newInput${i}`).val());
+ }
+ switch (info){
+     case departmentInfo:
+         let department={
+             name: newInfo[0]
+         }
+        $.post("/department",department);
+     break;
+       
+     case roleInfo:
+         let role={
+             title: newInfo[0],
+             salary: newInfo[1],
+             departmentId: newInfo[2] 
+         }
+        $.post("/role",role);
+     break;
+
+     case employeeInfo:
+         let employee={
+             firstName: newInfo[0],
+             lastName: newInfo[1],
+             roleId: newInfo[2],
+             managerId: newInfo[3]
+         }
+         $.post("/employee",employee);
+     break;
+ }
+
 }
