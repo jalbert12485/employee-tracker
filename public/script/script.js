@@ -309,6 +309,7 @@ function addDisplay(info){
         newButton1.on("click", function(event){
           event.preventDefault();
           sendToServer(info);
+          location.reload();
 
         });
           newCol.append(newButton1);
