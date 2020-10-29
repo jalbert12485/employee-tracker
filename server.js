@@ -1,11 +1,8 @@
 const express = require("express");
 const path=require("path");
 const fs=require("fs");
-const Department=require("./node/department");
-const Employee=require("./node/employee");
-const Role=require("./node/role");
 var mysql = require("mysql");
-const { POINT_CONVERSION_COMPRESSED } = require("constants");
+
 
 var connection;
 if(process.env.JAWSDB_URL){
@@ -21,7 +18,7 @@ if(process.env.JAWSDB_URL){
   user: "root",
 
   // Your password
-  password: "",
+  password: "root",
   database: "employee_tracker"
 });};
 
@@ -77,6 +74,20 @@ app.post("/:category", function(req,res){
 
 });
 
+app.post("/update/:table/:column", function(req,res){
+  let table=req.params.table;
+  let column=req.params.column;
+  let id=req.body.id+1;
+  let value=req.body.value;
+
+  connection.query(
+    `UPDATE ${table}  SET ${column}="${value}" where id=${id};`,
+    function(err, response) {
+      if (err) throw err;
+      res.end();
+    });
+  
+});
 
 
 app.get("/*", function(req, res) {
