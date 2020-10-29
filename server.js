@@ -32,78 +32,7 @@ app.use(express.static("public"));
 // Routes
 // ===========================================================
 
-// app.get("/*", function(req, res) {
-//     res.sendFile(path.join(__dirname, `/public/index.html`));
-// });
-
-// connection.connect(function(err) {
-//   if (err) {
-//     console.error("error connecting: " + err.stack);
-//     return;
-//   }
-
-//   console.log("connected as id " + connection.threadId);
-// });
-
-
-
-// app.post("/admin/productadd/diaper", function(req, res) {
-
-//   let sent=req.body;
-  
-//   let diaper1=new Diaper(sent.name, sent.price, sent.short, sent.long, sent.imgSrc, sent.imgAlt, sent.inventory, sent.style, sent.size, sent.print);
-  
- 
-//     createProduct(diaper1);
-    
-//     res.end();
-    
-//   });
-  
-  
-  
-  
-//   function createProduct(product){
-//     connection.query(
-//       "INSERT INTO products SET ?",
-//       product,
-//       function(err, res) {
-//         if (err) throw err;
-        
-//       });
-  
-//   }
-
-
- 
-  
-
-// app.post("/admin/productadd/wipe", function(req, res) {
-
-// let sent=req.body;
-
-// let wipe1=new Wipe(sent.name, sent.price, sent.short, sent.long, sent.imgSrc, sent.imgAlt, sent.inventory, sent.dimensions);
-
-
-//   createProduct(wipe1);
-//   res.end();
-
-// });
-
-
-
-
-// app.get("/admin/products", function(req, res) {
-//   connection.query("SELECT * FROM products", function(err, response) {
-//     if (err) throw err;
-
-//     res.json(response);
- 
- 
-
-//   });
-// });
-app.get("/view/products", function(req, res) {
+app.get("/view/information", function(req, res) {
   connection.query(`SELECT Concat(employee.firstName,' ',employee.lastName) as Name, role.title as Title, role.salary as Salary, department.name as Department, Concat(emp.firstName,' ',emp.lastName) as Manager FROM employee JOIN role
 	ON (employee.roleId = role.id)
     JOIN department ON (role.departmentId=department.id)
@@ -114,6 +43,15 @@ app.get("/view/products", function(req, res) {
  
  
 
+  });
+});
+
+app.get("/change/:value", function(req, res){
+    let value=req.params.value;  
+  
+  connection.query(`SELECT * FROM ${value}`, function(err, response){
+    if (err) throw err;
+    res.json(response);
   });
 });
 

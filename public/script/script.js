@@ -5,29 +5,126 @@ let returnData;
 
 $("#add-data").on("click",createAddDisplay);
 $("#manage-data").on("click", function(){
-    $.get("/view/products")
+    $.get("/view/information")
     .done(function(data){
         returnData=data;
         createInformationDisplay();
-    })
+    });
 
 });
-// $("#change-data").on("click", createChangeDisplay);
+$("#change-data").on("click", createChangeDisplay);
 
-// function createChangeDisplay(){
-//     $("#button-div").empty();
-//     $("#button-div").html(`<div class="col-md-4" id="change-department"><button type="button" class="btn btn-primary" >Change Departments</button></div>
-//     <div class="col-md-4" id="change-role"><button type="button" class="btn btn-primary" >Change Roles</button></div>
-//     <div class="col-md-4" id="change-employee"><button type="button" class="btn btn-primary" >Change Employees</button></div>`);
+function createChangeDisplay(){
+    $("#button-div").empty();
+    $("#button-div").html(`<div class="col-md-4" id="change-department"><button type="button" class="btn btn-primary" >Change Departments</button></div>
+    <div class="col-md-4" id="change-role"><button type="button" class="btn btn-primary" >Change Roles</button></div>
+    <div class="col-md-4" id="change-employee"><button type="button" class="btn btn-primary" >Change Employees</button></div>`);
 
-//     $("#add-department").on("click", function(){
-//         addDisplay("Department");});
-//     $("#add-role").on("click",function(){addDisplay("Role");});
-//     $("#add-employee").on("click",function(){addDisplay("Employee");});
-// }
+    $("#change-department").on("click", function(){
+        getChangeInfo("department");});
+    $("#change-role").on("click",function(){getChangeInfo("role");});
+    $("#change-employee").on("click",function(){getChangeInfo("employee");});
+}
+
+let departmentData;
+let roleData;
+let employeeData;
+
+function getChangeInfo(value){
+
+    $.ajax({
+        url: `/change/department`,
+      })
+    .then(function(data){
+        departmentData=data;
+       
+        
+        $.ajax({
+            url: `/change/role`,
+          })
+        .then(function(data){
+            roleData=data;
+
+            $.ajax({
+                url: `/change/employee`,
+              })
+            .then(function(data){
+                employeeData=data;
+            console.log(data);
+                getMoreChangeInput(value);
+            });
+        });
+    });
+    
+}
+
+function getMoreChangeInput(value){
+    $("#button-div").empty();
+    let newSelect=$("<div>");
+
+    let newHTML="";
+
+    switch (value){
+
+        case "department":
+        for(let i=0; i < departmentData.length; i++){
+            newHTML += `<option value=${i}> ${departmentData[i].name}<option>`;
+        };
+        break;
+        case "role":
+            for(let i=0; i < roleData.length; i++){
+                let j=roleData[i].departmentId-1;
+                newHTML += `<option value=${i}> ${roleData[i].title} of ${departmentData[j].name}<option>`;
+            };
+            break;
+        case "employee":
+            for(let i=0; i < employeeData.length; i++){
+                newHTML += `<option value=${i}> ${employeeData[i].firstName} of ${employeeData[i].lastName}<option>`;
+            };
+            break;
+
+    }
+    newSelect.html( `<form> <div class="form-group">
+    <select class="form-control" id="${value}-change"><option> Select ${value}</option> ${newHTML}
+    </select>
+  </div> </form>`);
+  $("#button-div").append(newSelect);
+  switch (value){
+
+    case "department":
+        $(`#department-change`).on("change",function(e){
+            e.preventDefault();
+            departmentChangeTable(this.value);});
+    break;
+    case "role":
+        $(`#role-change`).on("change",function(){
+            roleChange2(this.value);
+            $("#role-change".attr("disabled",true));
+        });
+        break;
+    case "employee":
+        $(`#employee-change`).on("change",function(){
+            employeeChange2(this.value);
+            $("#employee".attr("disabled",true));
+        });
+        break;
+
+}
+}
 
 
+function departmentChangeTable(id){
+    
+    console.log("Department ID " +id);
+}
 
+function roleChange2(id){
+    console.log("Role ID "+ id);
+}
+
+function employeeChange2(id){
+    console.log("Employee ID "+ id);
+}
 
 
 function createAddDisplay(){
