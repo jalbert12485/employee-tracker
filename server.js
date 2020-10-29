@@ -5,8 +5,13 @@ const Department=require("./node/department");
 const Employee=require("./node/employee");
 const Role=require("./node/role");
 var mysql = require("mysql");
+const { POINT_CONVERSION_COMPRESSED } = require("constants");
 
-var connection = mysql.createConnection({
+var connection;
+if(process.env.JAWSDB_URL){
+  connection=mysql.createConnection(proccess.env.JAWSDB_URL);
+}else{
+  connection = mysql.createConnection({
   host: "localhost",
 
   // Your port; if not 3306
@@ -18,7 +23,7 @@ var connection = mysql.createConnection({
   // Your password
   password: "root",
   database: "employee_tracker"
-});
+});};
 
 
 const app = express();
