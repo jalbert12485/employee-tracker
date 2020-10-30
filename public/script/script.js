@@ -79,7 +79,7 @@ function getMoreChangeInput(value){
             break;
         case "employee":
             for(let i=0; i < employeeData.length; i++){
-                newHTML += `<option value=${i}> ${employeeData[i].firstName} of ${employeeData[i].lastName}</option>`;
+                newHTML += `<option value=${i}> ${employeeData[i].firstName} ${employeeData[i].lastName}</option>`;
             };
             break;
 
@@ -94,19 +94,19 @@ function getMoreChangeInput(value){
     case "department":
         $(`#department-change`).on("change",function(e){
             e.preventDefault();
-            departmentChangeTable(this.value);
+            changeTable(value, "name", this.value);
             $("#department-change").attr("disabled",true);
         });
     break;
     case "role":
         $(`#role-change`).on("change",function(){
-            roleChange2(this.value);
+            roleChange2(value, this.value);
             $("#role-change").attr("disabled",true);
         });
         break;
     case "employee":
         $(`#employee-change`).on("change",function(){
-            employeeChange2(this.value);
+            employeeChange2(value, this.value);
             $("#employee-change").attr("disabled",true);
         });
         break;
@@ -115,8 +115,8 @@ function getMoreChangeInput(value){
 }
 
 
-function departmentChangeTable(id){
-    
+function changeTable(table, column, id){
+    console.log(id);
 
     let newForm=$("<form>");
     newForm.addClass("form-inline");
@@ -136,24 +136,141 @@ function departmentChangeTable(id){
     $("#button-div").append(newForm);
 
     $("#new-value-submit").on("click",function(){
-        updateDepartmentName(id);
+        updateName(table, column, id);
     })
 
 }
 
-function updateDepartmentName(id){
+function updateName(table, column, id){
     let val=$("#new-value").val();
-    $.post("update/department/name", { "id": id, "value": val }).done(function(){
+    $.post(`update/${table}/${column}`, { "id": id, "value": val }).done(function(){
         location.reload();
     })
 }
 
-function roleChange2(id){
-    console.log("Role ID "+ id);
+function roleChange2(table, id){
+
+    
+    let newForm=$("<form>");
+    newForm.addClass("form-inline");
+    let newInput=$("<select>");
+    newInput.attr("placeholder","Enter New Value");
+    newInput.addClass("form-control mb-4 ml-1");
+    newInput.attr("type","text");
+    newInput.attr("id","column-select");
+
+    let newOption=$("<option>");
+    newOption.text("Select");
+    newOption.val("title"); 
+    newInput.append(newOption);
+    newOption=$("<option>");
+    newOption.text("Title");
+    newOption.val("title");
+    newInput.append(newOption);
+    newOption=$("<option>");
+    newOption.text("Department");
+    newOption.val("departmentId");
+    newInput.append(newOption);
+
+
+    newForm.append(newInput);
+    $("#button-div").append(newForm);
+
+    $(`#column-select`).on("change",function(e){
+        e.preventDefault();
+        if(this.value=="title"){
+        changeTable(table, this.value, id);}else{
+        changeRoleDeptId(table, "departmentId", id);
+        }
+        $("#column-select").attr("disabled",true);
+    });
+
 }
 
-function employeeChange2(id){
-    console.log("Employee ID "+ id);
+function employeeChange2(table, id){
+    let newForm=$("<form>");
+    newForm.addClass("form-inline");
+    let newInput=$("<select>");
+    newInput.attr("placeholder","Enter New Value");
+    newInput.addClass("form-control mb-4 ml-1");
+    newInput.attr("type","text");
+    newInput.attr("id","column-select");
+
+    let newOption=$("<option>");
+    newOption.text("Select");
+    newOption.val("title"); 
+    newInput.append(newOption);
+    newOption=$("<option>");
+    newOption.text("First Name");
+    newOption.val("firstName");
+    newInput.append(newOption);
+    newOption=$("<option>");
+    newOption.text("Last Name");
+    newOption.val("lastName");
+    newInput.append(newOption);
+    newOption=$("<option>");
+    newOption.text("Role");
+    newOption.val("roleId");
+    newInput.append(newOption);
+    newOption=$("<option>");
+    newOption.text("Manager");
+    newOption.val("managerId");
+    newInput.append(newOption);
+
+
+    newForm.append(newInput);
+    $("#button-div").append(newForm);
+
+    $(`#column-select`).on("change",function(e){
+        e.preventDefault();
+        if($("#column-select").val()=="firstName" || $("#column-select").val()=="lastName" ){
+        changeTable(table, this.value, id);}else if($("#column-select").val()=="roleId"){
+            changeEmployeeRole(table, this.value, id);
+        }else{
+            changeEmployeeManager(table, this.value, id);
+        }
+        $("#column-select").attr("disabled",true);
+    });
+}
+
+function changeRoleDeptId(table, column, id){
+    let newForm=$("<form>");
+    newForm.addClass("form-inline");
+    let newInput=$("<select>");
+    newInput.attr("placeholder","Enter New Value");
+    newInput.addClass("form-control mb-4 ml-1");
+    newInput.attr("type","text");
+    newInput.attr("id","dept-id-select");
+
+    let newOption=$("<option>");
+    newOption.text("Select");
+    newOption.val("title"); 
+    newInput.append(newOption);
+    for(let i=0; i<departmentData.length; i++){
+        newOption=$("<option>");
+        newOption.text(departmentData[i].name);
+        newOption.attr("value",i);
+        newInput.append(newOption);
+    }
+    newForm.append(newInput);
+    $("#button-div").append(newForm);
+
+    $("#dept-id-select").on("change",function(){
+        let val=$("#dept-id-select").val();
+        $.post(`update/${table}/${column}`, { "id": id, "value": Number(val)+1 }).done(function(){
+            location.reload();
+        })
+
+    })
+
+}
+
+function changeEmployeeRole(){
+
+}
+
+function changeEmployeeManager(){
+
 }
 
 

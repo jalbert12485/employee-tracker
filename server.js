@@ -77,8 +77,10 @@ app.post("/:category", function(req,res){
 app.post("/update/:table/:column", function(req,res){
   let table=req.params.table;
   let column=req.params.column;
-  let id=req.body.id+1;
+  let id=Number(req.body.id)+1;
   let value=req.body.value;
+
+  console.log(`UPDATE ${table}  SET ${column}="${value}" where id=${id};`);
 
   connection.query(
     `UPDATE ${table}  SET ${column}="${value}" where id=${id};`,
