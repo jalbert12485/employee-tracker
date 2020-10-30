@@ -239,7 +239,6 @@ function changeRoleDeptId(table, column, id){
     let newInput=$("<select>");
     newInput.attr("placeholder","Enter New Value");
     newInput.addClass("form-control mb-4 ml-1");
-    newInput.attr("type","text");
     newInput.attr("id","dept-id-select");
 
     let newOption=$("<option>");
@@ -265,11 +264,66 @@ function changeRoleDeptId(table, column, id){
 
 }
 
-function changeEmployeeRole(){
+function changeEmployeeRole(table, column, id){
+    let newForm=$("<form>");
+    newForm.addClass("form-inline");
+    let newInput=$("<select>");
+    newInput.attr("placeholder","Enter New Value");
+    newInput.addClass("form-control mb-4 ml-1");
+    newInput.attr("id","role-id-select");
+
+    let newOption=$("<option>");
+    newOption.text("Select");
+    newOption.val(0); 
+    newInput.append(newOption);
+    for(let i=0; i<roleData.length; i++){
+        newOption=$("<option>");
+        newOption.text(`${roleData[i].title} of ${departmentData[Number(roleData[i].departmentId)-1].name}`);
+        newOption.attr("value",i);
+        newInput.append(newOption);
+    }
+    newForm.append(newInput);
+    $("#button-div").append(newForm);
+
+    $("#role-id-select").on("change",function(){
+        let val=$("#role-id-select").val();
+        $.post(`update/${table}/${column}`, { "id": id, "value": Number(val)+1 }).done(function(){
+            location.reload();
+        })
+
+    })
 
 }
 
-function changeEmployeeManager(){
+function changeEmployeeManager(table, column, id){
+    let newForm=$("<form>");
+    newForm.addClass("form-inline");
+    let newInput=$("<select>");
+    newInput.attr("placeholder","Enter New Value");
+    newInput.addClass("form-control mb-4 ml-1");
+    newInput.attr("id","role-id-select");
+
+    let newOption=$("<option>");
+    newOption.text("Select");
+    newOption.val(0); 
+    newInput.append(newOption);
+    for(let i=0; i<roleData.length; i++){
+        newOption=$("<option>");
+        newOption.text(`${employeeData[i].firstName} ${employeeData[i].lastName}`);
+        newOption.attr("value",i);
+        newInput.append(newOption);
+    }
+    newForm.append(newInput);
+    $("#button-div").append(newForm);
+
+    $("#role-id-select").on("change",function(){
+        let val=$("#role-id-select").val();
+        $.post(`update/${table}/${column}`, { "id": id, "value": Number(val)+1 }).done(function(){
+            location.reload();
+        })
+
+    })
+
 
 }
 
