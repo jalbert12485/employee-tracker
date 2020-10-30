@@ -1,4 +1,4 @@
-# Team Information 
+# Employee Tracker 
 ## Table of Contents 
  * [About](#About) 
  * [Installation](#Installation) 
@@ -7,27 +7,32 @@
  * [License](#License) 
   
 ## About 
- In this project, we will use a node js program that allows the user to add, remove or display team members on his/her programming team.  After adding members information including name, role, id, email and role specific information, the program will generate an .html and .js file meant to nicely display the information for the user. 
+ In this project we provide a intuitional user inerface that allows for adding, reading and updating employee information.  All such information is saved to a database for persistent recall. 
  ![](Screenshot.png) 
 ## Installation 
- 1. Clone this repository at [GitHub](https://github.com/jalbert12485/team-information.git) 
+ 1. Clone this repository at [GitHub](https://github.com/jalbert12485/employee_tracker.git) 
 ```sh 
-git clone https://github.com/jalbert12485/team-information.git
+git clone https://github.com/jalbert12485/employee_tracker.git
  ``` 
 2. Install packages using 
 ```sh 
 npm i
  ``` 
+ 3. To run the server locally, you will then need to use 
+ ```sh 
+npm i
+ ``` 
+ You will furtherneed to set up your database and connect it to your work in the server.js file.  The database schema for mysql is available as schema.sql.
  
 ## Usage 
- In order to use this program, you will need to access the app.js file using a node terminal.  You will then be prompted to add, remove, display team members or stop.  In order to add team members, you will be prompted for relevant information.  When you are done adding a member, your employee list will be saved to another file.  When running, you can also remove members from your list.  To do this, you will be required to enter the employee ID that you assigned that member.  Otherwise, if you would like to remove all employees and start over, you can type 'All' when prompted for an ID.  After adding or removing a team member, the program will begin again so that you can add or remove more members or display or stop.  Finally, you can display the information on a webpage.  When running app.js and choosing display, a script.js and index.html will be created.  If you open this index.html in a browser you will be able to view your list of team members.  In order to change the focused member, you need only click on the name of the employee you would like to see more detail of. 
+ In order to use this project as a user, you will go to the [deployed project](https://ancient-reef-12584.herokuapp.com/).  When there, you will prompted for what actions you would like to take.  You can add departments, roles and employees by filling out the form and submitting it.  You can also view the current information that is stored by clicking the view button.  Finally, you can change any of this information by clicking the change button and following the prompts to say what you would like to change and what you would like to change it to. 
 ## Contributing 
  If you would like to contribute to this package, please contact the author via [email](mailto:jalbert@carthage.edu).  Provide any details about your proposed chagnes so that your contribution can be made. 
 ## License 
- MIT License 
+ This is free and unencumbered software released into the public domain. Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means. 
  
- Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the /'Software/'), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions: 
+ In jurisdictions that recognize copyright laws, the author or authors of this software dedicate any and all copyright interest in the software to the public domain. We make this dedication for the benefit of the public at large and to the detriment of our heirs and successors. We intend this dedication to be an overt act of relinquishment in perpetuity of all present and future rights to this software under copyright law. 
  
- The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.  
-  
- THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+ THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE. 
+ 
+ For more information, please refer to <https://unlicense.org> 
