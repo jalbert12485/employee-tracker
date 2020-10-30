@@ -1,9 +1,11 @@
+// Constant to give the required packages.
+
 const express = require("express");
 const path=require("path");
 const fs=require("fs");
 var mysql = require("mysql");
 
-
+//  Provides the connection to the database.  Within the if else statement, the if covers if we are viewing the work on heroku and using the JAWSDB database.  Otherwise, it will connect to the local database.
 var connection;
 if(process.env.JAWSDB_URL){
   connection=mysql.createConnection(process.env.JAWSDB_URL);
@@ -18,11 +20,11 @@ if(process.env.JAWSDB_URL){
   user: "root",
 
   // Your password
-  password: "root",
+  password: "",
   database: "employee_tracker"
 });};
 
-
+// constants to allow for easier use of express.
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -33,6 +35,8 @@ app.use(express.static("public"));
 
 // Routes
 // ===========================================================
+
+// This get request sends all stored employee information in a nice way for the user.  That is, instead of numberd ids, we display the names of the corresponding people, departments or roles using the join of tables.
 
 app.get("/view/information", function(req, res) {
   connection.query(`SELECT Concat(employee.firstName,' ',employee.lastName) as Name, role.title as Title, role.salary as Salary, department.name as Department, Concat(emp.firstName,' ',emp.lastName) as Manager FROM employee JOIN role
@@ -48,6 +52,8 @@ app.get("/view/information", function(req, res) {
   });
 });
 
+// In order to change data, we will first need to get the data so that the user will know what can be changed.
+
 app.get("/change/:value", function(req, res){
     let value=req.params.value;  
   
@@ -57,6 +63,8 @@ app.get("/change/:value", function(req, res){
   });
 });
 
+
+// This post allows us to add information into any table (which we call category here) by using the object which we sent to it.
 
 app.post("/:category", function(req,res){
 
@@ -73,6 +81,8 @@ app.post("/:category", function(req,res){
     res.end();
 
 });
+
+// When changing information, the user will send the table, column id and desired value.  We then used these to update the table in the database.
 
 app.post("/update/:table/:column", function(req,res){
   let table=req.params.table;
@@ -91,6 +101,7 @@ app.post("/update/:table/:column", function(req,res){
   
 });
 
+// A general get to show the user the starting page (index.html).
 
 app.get("/*", function(req, res) {
     res.sendFile(path.join(__dirname, `/public/index.html`));

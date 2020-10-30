@@ -1,9 +1,15 @@
+// These arrays will be used to construct the table that we display to the user when they request to see employee information.
+
 let departmentInfo=["Id","Name"];
 let roleInfo=["Id", "Title", "Salary", "Department Id" ];
 let employeeInfo=["Id","First Name","Last Name","Role Id", "Manager Id"];
 let returnData;
 
+// When the add data button is clicked, we display a form to facilitate the adding of data.
+
 $("#add-data").on("click",createAddDisplay);
+
+// When the view data button is clicked, we will display a table of the information along with selectors that allow the user to focus their view.
 $("#manage-data").on("click", function(){
     $.get("/view/information")
     .done(function(data){
@@ -12,8 +18,12 @@ $("#manage-data").on("click", function(){
     });
 
 });
+
+// When the change data button is clicked we create new buttons to further prompt the user.
 $("#change-data").on("click", createChangeDisplay);
 
+
+// This creates new buttons with functionality to get more information from the user on what they want to change.
 function createChangeDisplay(){
     $("#button-div").empty();
     $("#button-div").html(`<div class="col-md-4" id="change-department"><button type="button" class="btn btn-primary" >Change Departments</button></div>
@@ -26,10 +36,14 @@ function createChangeDisplay(){
     $("#change-employee").on("click",function(){getChangeInfo("employee");});
 }
 
+// We will use this variables to keep track of the information that is available for the user to change.
+
 let departmentData;
 let roleData;
 let employeeData;
 
+
+// Get the current information on employees one table at a time.
 function getChangeInfo(value){
 
     $.ajax({
@@ -58,6 +72,7 @@ function getChangeInfo(value){
     
 }
 
+// After choosing if they want to change the department, role or employee data, the user will be prompted to say which one of these they want to change.  This will be done through dropdown select options so that they user will have to choose an existing option.
 function getMoreChangeInput(value){
     $("#button-div").empty();
     let newSelect=$("<div>");
@@ -114,6 +129,7 @@ function getMoreChangeInput(value){
 }
 }
 
+// This create a text input that allows the user to type in the new value they wish to assign to whatever item they chose to change.
 
 function changeTable(table, column, id){
     console.log(id);
@@ -141,12 +157,16 @@ function changeTable(table, column, id){
 
 }
 
+// UpdateName send the information from the user to the server to allow for the informatoin to be updated in the database.
+
 function updateName(table, column, id){
     let val=$("#new-value").val();
     $.post(`update/${table}/${column}`, { "id": id, "value": val }).done(function(){
         location.reload();
     })
 }
+
+// If the user wants to change role information, they will be prompted to say if htey want to change the title or the deparment.  If they choose title, we send them back up to the change table function above.  If they choose department, we send them to changeroledeptid to give them the available choices.
 
 function roleChange2(table, id){
 
@@ -186,6 +206,8 @@ function roleChange2(table, id){
     });
 
 }
+
+// Similar to the role change 2, we need more information if the user wishes to change the employee information.  We process name changes through the table change form above.  Otherwise, we will give them the available choices for role and manager.
 
 function employeeChange2(table, id){
     let newForm=$("<form>");
@@ -233,6 +255,8 @@ function employeeChange2(table, id){
     });
 }
 
+// Displays the options for change and collects the users wishes, then sends the change along to the server.
+
 function changeRoleDeptId(table, column, id){
     let newForm=$("<form>");
     newForm.addClass("form-inline");
@@ -263,6 +287,8 @@ function changeRoleDeptId(table, column, id){
     })
 
 }
+// Displays the options for change and collects the users wishes, then sends the change along to the server.
+
 
 function changeEmployeeRole(table, column, id){
     let newForm=$("<form>");
@@ -294,6 +320,8 @@ function changeEmployeeRole(table, column, id){
     })
 
 }
+// Displays the options for change and collects the users wishes, then sends the change along to the server.
+
 
 function changeEmployeeManager(table, column, id){
     let newForm=$("<form>");
@@ -327,6 +355,7 @@ function changeEmployeeManager(table, column, id){
 
 }
 
+//  Displays more buttons after the user decides to add information so that it can be narrowed down to see if they want to add a department, role or employee.
 
 function createAddDisplay(){
     $("#button-div").empty();
@@ -341,6 +370,7 @@ function createAddDisplay(){
 
 }
 
+// Displays the table of information joining all the tables we have in the database.  Also creates select options for viewing a subset of the total number of employees.  This includes viewing by department, manager or role.
 
 function createInformationDisplay(){
     $("#form-container").empty();
@@ -383,6 +413,8 @@ function createInformationDisplay(){
 
 }
 
+// Uses viewselect to create all three selector inputs.
+
 function viewSelectOptions(){
     let selectContainer=$("<div>");
     selectContainer.addClass("row");
@@ -395,6 +427,7 @@ function viewSelectOptions(){
 
 }
 
+// Creates the selector options based on input.
 
 function viewSelect(value){
 
@@ -426,6 +459,8 @@ function viewSelect(value){
 
 
 }
+
+// Creates the filtered view based on the users choices.
 
 function filteredEmployeeView(value, name){
 
@@ -470,7 +505,7 @@ function filteredEmployeeView(value, name){
 
 }
 
-
+// Create the form display that will be used by the user to fill out the required information to add data.
 
 function addDisplay(info){
 
@@ -533,6 +568,8 @@ function addDisplay(info){
       
       
 }
+
+// Sends the add information to the server through a post.
 
 function sendToServer(info){
     let newInfo=[];
